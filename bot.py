@@ -6,6 +6,8 @@ import discord
 # Charger les variables d'environnement
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+if not TOKEN:
+    raise ValueError("Le token Discord n'est pas défini.")
 
 # Configurer les intents nécessaires
 intents = discord.Intents.default()
