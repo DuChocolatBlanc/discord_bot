@@ -1,30 +1,28 @@
 import os
-from dotenv import load_dotenv
-from discord.ext import commands
 import discord
-from examples.command import setup_commands
+from discord.ext import commands
+from dotenv import load_dotenv
 
 # Charger les variables d'environnement
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-if not TOKEN:
-    raise ValueError("Le token Discord n'est pas défini.")
 
-# Configurer les intents nécessaires
+# Configurer les intents
 intents = discord.Intents.default()
 intents.members = True
 
-# Créer le bot
+# Créer une instance du bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Charger les commandes depuis commands.py
-from commands import setup_commands
-setup_commands(bot)
+# Charger dynamiquement les cogs depuis le dossier "commands"
+for filename in os.listdir('./commands'):
+    if filename.endswith('.py') and not filename.startswith('__'):
+        bot.load_extension(f'commands.{filename[:-3]}')
 
-# Événement quand le bot est prêt
+# Événement : prêt
 @bot.event
 async def on_ready():
-    print(f"{bot.user.name} est connecté et prêt à l'emploi !")
+    print(f"{bot.user.name} est prêt et en ligne !")
 
 # Lancer le bot
 bot.run(TOKEN)
