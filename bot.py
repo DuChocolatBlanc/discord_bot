@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import discord
+from examples.command import setup_commands
 
 # Charger les variables d'environnement
 load_dotenv()
