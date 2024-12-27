@@ -9,20 +9,19 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 # Configurer les intents
 intents = discord.Intents.default()
-intents.members = True
+intents.message_content = True  # Nécessaire pour lire les messages
+intents.members = True  # Nécessaire pour interagir avec les membres
 
 # Créer une instance du bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Charger dynamiquement les cogs depuis le dossier "commands"
-for filename in os.listdir('./commands'):
-    if filename.endswith('.py') and not filename.startswith('__'):
-        bot.load_extension(f'commands.{filename[:-3]}')
-
-# Événement : prêt
+# Charger dynamiquement les extensions (cogs)
 @bot.event
 async def on_ready():
     print(f"{bot.user.name} est prêt et en ligne !")
+    for filename in os.listdir('./commands'):
+        if filename.endswith('.py') and not filename.startswith('__'):
+            await bot.load_extension(f'commands.{filename[:-3]}')
 
 # Lancer le bot
 bot.run(TOKEN)
